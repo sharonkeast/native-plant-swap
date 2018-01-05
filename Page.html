@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <base target="_top">
+ <meta charset="utf-8">
+ <title>Native Plant Swap</title>
+<script src="https://apis.google.com/js/api.js?onload=onApiLoad"></script>
+<?!= HtmlService.createHtmlOutputFromFile('Stylesheet').getContent(); ?>
+</head>
+<body>
+ <div style="height:600px; overflow-y: auto; padding-left: 8px;">
+ <table id="postsTable">
+    <thead>
+    <tr>
+    <th>Native Plant Swap Posts</th>
+    <th>Contact</th>
+    </tr>
+    </thead>
+    <tbody id="postsTableBody">
+    <tr>
+    <td>Loading...</td>
+    <td>Loading...</td>
+    </tr>
+    </tbody>
+ </table>
+</div>
+<div id="overlay">
+ <div class="modal">
+  <form class="form-group">
+    <span aria-label="Close Modal Box" onclick="document.getElementById('overlay').style.visibility='hidden'" 
+      class="close" title="Close Modal">&times;</span>      
+    <img src="http://swni.org/sites/default/files/2017-12/NativePlantSwapH2.jpg" alt="Header image" class="header">
+    <h2>Send a message</h2>
+    <span class="gray">To this post:</span>
+    <br />
+    <span class="current" id="originalPostText"></span>
+    <br /><br />
+    <label for="Name" class="gray">Your Name:</label>
+    <input type="text" id="name">
+    <br />
+    <label for="ContactInfo" class="gray">Your contact info:</label>
+    <input type="text" id="contactInfo">
+    <br />
+    <label for="yourMessage" class="gray">Message:</label>
+    <textarea id="yourMessage" rows="3"></textarea>
+    <br /> 
+    <button id="sendButton" type="button" class="action">Send</button>
+    <button type="button" id="cancelButton">Cancel</button>
+    <br />
+    <span id="responseId"></span>
+  </form>
+  </div>
+  </div>
+<?!= HtmlService.createHtmlOutputFromFile('JavaScript').getContent(); ?>
+</body>
+</html>
