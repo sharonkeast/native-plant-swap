@@ -1,0 +1,80 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!-- Custom client-side JavaScript code. -->
+<script>
+$(function() {
+  google.script.run
+      .withSuccessHandler(buildTable)
+      .getPostsData();
+});
+
+// Build the HTML table. 
+// Add an event listener to each button.
+function buildTable(pdata) {
+   var emptyTable = true;
+   var list = $('#postsTableBody');   
+   list.empty();
+   var j = 0;
+   var buttonName = "";
+   var trName = "";
+   var string  = "";
+   if (typeof pdata !== 'undefined' && pdata.length > 0) {
+      for (var i = 0; i < pdata.length; i++) {
+         if ( typeof pdata[i][1] !== 'undefined' ) {
+            j = j + 1;
+            trName = "tr" + j;
+            buttonName = "button" + j;
+            string = "<tr id='" + trName + "'><td>" + pdata[i][1] + "<br/>" + pdata[i][2] + "</td>" +
+                  "<td><button id='" + buttonName + 
+                  "' type='button' class='create' data-responseid='" + pdata[i][0] + "' data-trname='" + trName + "'>" +
+                  "Send a message</button></td></tr>";
+            list.append(string);
+            emptyTable = false;
+            document.getElementById(buttonName).addEventListener("click", function() {
+               document.getElementById("originalPostText").innerHTML = 
+                  document.getElementById(this.dataset.trname).firstChild.innerHTML;
+               document.getElementById("name").value                 = "";
+               document.getElementById("contactInfo").value          = "";
+               document.getElementById("yourMessage").value          = "";
+               document.getElementById("responseId").innerHTML       = this.dataset.responseid; 
+               overlay();
+            });
+         };
+      };
+   };
+   if ( emptyTable == true ) {
+      string = "<tr><td>No posts to display</td><td>***</td></tr>";
+      list.append(string);
+   };     
+}
+
+function handleSendButton() {
+    var msgName           = this.form[0].value;
+    var msgContact        = this.form[1].value;
+    var msgMessage        = this.form[2].value;
+    var pResponseId       = document.getElementById("responseId").innerHTML;
+    var pPost             = document.getElementById("originalPostText").innerHTML;
+    var emailBodyPart1    = "Hi,<br><br>You have a message from the Native Plant Swap website:" +
+       "<br><br><b>" + msgMessage + "</b>" +
+       "<br><br>From:&nbsp;" + msgName +
+       "<br>Contact Info:&nbsp;" + msgContact + 
+       "<br><br><br>This message is in response to your post:<br><br>" + pPost +     
+       "<br><br><br>";
+    overlay();
+    google.script.run
+      .withSuccessHandler(function() {alert("Message sent");})
+      .sendMessage(pResponseId, emailBodyPart1);           
+};
+
+// Close the dialog window.
+function overlay() {
+	el = document.getElementById("overlay");
+	el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+}
+
+// Handle the sendButton click.
+document.getElementById("sendButton").addEventListener("click", handleSendButton);
+
+// Handle the cancelButton click.
+document.getElementById("cancelButton").addEventListener("click", overlay);
+
+</script>
